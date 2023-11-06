@@ -1,10 +1,78 @@
-nume fisier: imagine.bmp
-inaltime: 1280
-lungime: 1920
-dimensiune: 7372938
+nume director: /home/mihai/Desktop/POO/Lab4
 identificatorul utilizatorului: 1000
-timpul ultimei modificari: 05.11.2023
+drepturi de acces user: RWX
+drepturi de acces grup: R-X
+drepturi de acces altii: R-X
+
+nume fisier: /home/mihai/Desktop/POO/#p1.java#
+dimensiune: 727
+identificatorul utilizatorului: 1000
 contorul de legaturi: 1
 drepturi de acces user: RW-
 drepturi de acces grup: R--
 drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/ClientCeas.class
+dimensiune: 365
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/p1.java
+dimensiune: 729
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/test.java
+dimensiune: 105
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/Ceas.class
+dimensiune: 1134
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/p1.java~
+dimensiune: 712
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/test.java~
+dimensiune: 106
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/p1.class
+dimensiune: 402
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
+nume fisier: /home/mihai/Desktop/POO/AltClientCeas.class
+dimensiune: 406
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
