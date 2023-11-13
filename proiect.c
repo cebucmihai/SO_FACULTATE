@@ -221,7 +221,7 @@ int main(int argc, char *argv[]) {
         snprintf(entryPath, PATH_MAX, "%s/%s", inputDirName, entry->d_name);
         if (entry->d_type == DT_REG) {
             if (strstr(entryPath, ".bmp") != NULL) {
-                processBMP(fileName, outputFd);
+                processBMP(entryPath, outputFd);
             } else {
                 processOtherFile(entryPath, outputFd);
             }
