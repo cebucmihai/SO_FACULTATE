@@ -1,78 +1,9 @@
-nume director: /home/mihai/Desktop/POO/Lab4
-identificatorul utilizatorului: 1000
-drepturi de acces user: RWX
-drepturi de acces grup: R-X
-drepturi de acces altii: R-X
-
-nume fisier: /home/mihai/Desktop/POO/#p1.java#
-dimensiune: 727
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/ClientCeas.class
-dimensiune: 365
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/p1.java
-dimensiune: 729
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/test.java
-dimensiune: 105
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/Ceas.class
-dimensiune: 1134
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/p1.java~
-dimensiune: 712
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/test.java~
-dimensiune: 106
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/p1.class
-dimensiune: 402
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
-nume fisier: /home/mihai/Desktop/POO/AltClientCeas.class
-dimensiune: 406
-identificatorul utilizatorului: 1000
-contorul de legaturi: 1
-drepturi de acces user: RW-
-drepturi de acces grup: R--
-drepturi de acces altii: R--
-
+/home/mihai/Desktop/dir_iesire/imagine_1.bmp_statistica.txt : Numarul de linii este 10.
+/home/mihai/Desktop/dir_iesire/proiect_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/p_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/imagine_2.bmp_statistica.txt : Numarul de linii este 10.
+/home/mihai/Desktop/dir_iesire/statistica.txt_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/proiect.c_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/proiect.c~_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/readme.txt_statistica.txt : Numarul de linii este 7.
+/home/mihai/Desktop/dir_iesire/.git_statistica.txt : Numarul de linii este 5.
