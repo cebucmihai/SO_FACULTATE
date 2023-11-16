@@ -309,13 +309,11 @@ int main(int argc, char *argv[]) {
       } else if (entry->d_type == DT_LNK) {
 	processSymbolicLink(entryPath, outputFd, &linesWritten);
       }
-
-      // writeToStatFile(statFd, outputFileName, linesWritten);
       
       close(outputFd);
       exit(linesWritten);
     } else {
-      int status=0;
+      int status = 0;
       waitpid(childPid, &status, 0);
 
       
@@ -324,7 +322,7 @@ int main(int argc, char *argv[]) {
       } else {
 	printf("Procesul cu pid-ul %d nu s-a încheiat normal\n", childPid);
       }
-       // Scrierea valorii returnate de procesul fiu in fisierul statistica.txt
+       // Scrierea valorii returnate de procesul fiu in fisierul statistica.txt, mai exact numarul de linii
       writeToStatFile(statFd, childPid, WEXITSTATUS(status));
     }
   }
