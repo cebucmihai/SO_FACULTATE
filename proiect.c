@@ -50,9 +50,10 @@ void getPermissions(mode_t mode) {
              (mode & S_IWOTH) ? 'W' : '-',
              (mode & S_IXOTH) ? 'X' : '-');
 }
+
 //Aceasta functie verifica daca fisierul respectiv este de tip .BMP si afiseaza datele cerute in problema aferenta saptamanii 6
 void processBMP(const char *fileName, int outputFd, int *lines) {
-    int inputFd = open(fileName, O_RDONLY);
+    int inputFd = open(fileName, O_RDWR);
     if (inputFd == -1) {
         perror("Eroare la deschiderea fisierului BMP");
         return;
@@ -108,9 +109,44 @@ void processBMP(const char *fileName, int outputFd, int *lines) {
     if (write(outputFd, outputBuffer, strlen(outputBuffer)) == -1) {
         perror("Eroare la scrierea in fisierul de iesire");
     }
+    //Saptamana 8 : Transformarea imaginii in tonuri de alb si negru
+    pid_t childPid = fork();
 
+    if (childPid == -1) {
+        perror("Eroare la crearea procesului fiu");
+        close(inputFd);
+        return;
+    }
+
+    if (childPid == 0) {
+
+        lseek(inputFd, bmpHeader.offset, SEEK_SET);
+
+        char pixel[3];
+        ssize_t bytesRead;
+
+        while ((bytesRead = read(inputFd, pixel, sizeof(pixel))) > 0) {
+            char grayscale = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
+            memset(pixel, grayscale, sizeof(pixel));
+            lseek(inputFd, -bytesRead, SEEK_CUR);
+            write(inputFd, pixel, sizeof(pixel));
+        }
+
+        close(inputFd);
+        exit(0);
+    } else {
+        int status;
+        waitpid(childPid, &status, 0);
+
+        if (WIFEXITED(status)) {
+            printf("S-a încheiat procesul cu pid-ul %d și codul %d\n", childPid, WEXITSTATUS(status));
+        } else {
+            printf("Procesul cu pid-ul %d nu s-a încheiat normal\n", childPid);
+        }
+    }
     close(inputFd);
 }
+
 //Functie folosita pentru a obtine informatii despre celelalte tipuri de fisiere diferite de BMP
 void processOtherFile(const char *fileName, int outputFd, int *lines) {
     struct stat fileInfo;
@@ -191,18 +227,17 @@ void processSymbolicLink(const char *linkName, int outputFd, int *lines) {
 }
 
 // Funcție pentru a deschide și scrie în fișierul de statistică numarul de linii scrise in fisierele scrise in directorul de iesire
-void writeToStatFile(int statFd, char *outputFileName, int linesWritten) {
+void writeToStatFile(int statFd, int childPid, int linesWritten) {
 
   
   char buffer[512];
-  snprintf(buffer, sizeof(buffer), "%s : Numarul de linii este %d.\n", outputFileName, linesWritten);
+  snprintf(buffer, sizeof(buffer), "Pentru procesul fiu %d numarul de linii este %d.\n", childPid, linesWritten);
 
   if (write(statFd, buffer, strlen(buffer)) == -1) {
     perror("Eroare la scrierea in fisierul de statistica");
     exit(1);
   }
 
-  close(statFd);
 }
 
 int main(int argc, char *argv[]) {
@@ -266,7 +301,6 @@ int main(int argc, char *argv[]) {
       if (entry->d_type == DT_REG) {
 	if (strstr(entryPath, ".bmp") != NULL) {
 	  processBMP(entryPath, outputFd, &linesWritten);
-	  //  convertToGrayscale(entryPath);
 	} else {
 	  processOtherFile(entryPath, outputFd, &linesWritten);
 	}
@@ -276,19 +310,22 @@ int main(int argc, char *argv[]) {
 	processSymbolicLink(entryPath, outputFd, &linesWritten);
       }
 
-      writeToStatFile(statFd, outputFileName, linesWritten);
+      // writeToStatFile(statFd, outputFileName, linesWritten);
       
       close(outputFd);
-      exit(0);
+      exit(linesWritten);
     } else {
-      int status;
+      int status=0;
       waitpid(childPid, &status, 0);
+
       
       if (WIFEXITED(status)) {
 	printf("S-a încheiat procesul cu pid-ul %d și codul %d\n", childPid, WEXITSTATUS(status));
       } else {
 	printf("Procesul cu pid-ul %d nu s-a încheiat normal\n", childPid);
       }
+       // Scrierea valorii returnate de procesul fiu in fisierul statistica.txt
+      writeToStatFile(statFd, childPid, WEXITSTATUS(status));
     }
   }
 
