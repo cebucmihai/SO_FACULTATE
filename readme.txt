@@ -1,1 +1,1 @@
-/home/mihai/Desktop/SO/readme.txt - 209
+This is a project for Operating Systems Course.
