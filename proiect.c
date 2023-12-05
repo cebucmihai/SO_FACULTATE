@@ -139,7 +139,7 @@ void processBMP(const char *fileName, int outputFd, int *lines) {
         waitpid(childPid, &status, 0);
 
         if (WIFEXITED(status)) {
-            printf("S-a încheiat procesul cu pid-ul %d și codul %d\n", childPid, WEXITSTATUS(status));
+            printf("BMP:S-a încheiat procesul cu pid-ul %d și codul %d\n", childPid, WEXITSTATUS(status));
         } else {
             printf("Procesul cu pid-ul %d nu s-a încheiat normal\n", childPid);
         }
@@ -241,8 +241,8 @@ void writeToStatFile(int statFd, int childPid, int linesWritten) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 3) {
-    fprintf(stderr, "Usage: %s <director_intrare> <director_iesire>\n", argv[0]);
+  if (argc != 4) {
+    fprintf(stderr, "Usage: %s <director_intrare> <director_iesire> <caracter>\n", argv[0]);
     return 1;
   }
   
@@ -252,6 +252,8 @@ int main(int argc, char *argv[]) {
   DIR *dir;
   struct dirent *entry;
   dir = opendir(inputDirName);
+
+  int totalCorrectSentences = 0;
   
   if (dir == NULL) {
     perror("Eroare la deschiderea directorului de intrare");
@@ -270,23 +272,86 @@ int main(int argc, char *argv[]) {
   char statisticFile[PATH_MAX];
   snprintf(statisticFile, PATH_MAX, "%s/statistica.txt", inputDirName);
   int statFd = open(statisticFile, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+  //Deschidem pipe-ul aferent urmatoarelor : fiu_script -> parinte
+  int pipefd1[2];
+  if (pipe(pipefd1) == -1) {
+    perror("Eroare la deschiderea pipe-ului");
+    return 1;
+  }
+
   
   while ((entry = readdir(dir)) != NULL) {
     if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
       continue;
     }
+    pid_t StatChildPid = -1;
+    pid_t ScriptChildPid = -1;
     
     char entryPath[PATH_MAX];
+    
+    
     snprintf(entryPath, PATH_MAX, "%s/%s", inputDirName, entry->d_name);
     
-    pid_t childPid = fork();
-    
-    if (childPid == -1) {
-      perror("Eroare la crearea procesului fiu");
+    //Deschidem pipe-ul aferent urmatoarelor : fiu_statistica -> fiu_script
+    int pipefd2[2];
+    if (pipe(pipefd2) == -1) {
+      perror("Eroare la deschiderea pipe-ului");
       return 1;
     }
     
-    if (childPid == 0) {
+    if((entry->d_type == DT_REG || entry->d_type == DT_DIR || entry->d_type == DT_LNK) && (strstr(entryPath, ".bmp") != NULL)){
+      StatChildPid = fork();
+      
+      if (StatChildPid == -1) {
+	perror("Eroare la crearea procesului fiu");
+	return 1;
+      }
+    } else {
+      StatChildPid = fork();
+      
+      if (StatChildPid == -1) {
+	perror("Eroare la crearea procesului fiu");
+	return 1;
+      }
+      if(StatChildPid != 0){
+		ScriptChildPid = fork();
+		if ( ScriptChildPid == -1) {
+		  perror("Eroare la crearea procesului fiu");
+		  return 1;
+		}
+      }
+    }
+    if( StatChildPid > 0 && ScriptChildPid > 0){
+      close(pipefd2[0]);
+      close(pipefd2[1]);
+    }
+    if( ScriptChildPid == 0){
+      close(pipefd1[0]);
+      close(pipefd2[1]);
+ 
+      // redirecționează intrarea standard către capătul de citire al pipe-ului dintre fiu_script si fiu_statistica
+      if (dup2(pipefd2[0], STDIN_FILENO) == -1) {
+      	perror("Eroare la redirectionarea intrarii standard");
+      	exit(-1);
+       }
+      close(pipefd2[0]); 
+
+          //redirecționează ieșirea standard către capătul de scriere al pipe-ului dintre fiu_script si fiu_parinte
+     if (dup2(pipefd1[1], STDOUT_FILENO) == -1) {
+     	perror("Eroare la redirectionarea iesirii standard");
+      	exit(-1);
+      }
+      close(pipefd1[1]); 
+      execlp("bash", "bash", "./script",argv[3],(char*)NULL);
+      // Dacă execlp revine, înseamnă că a esuat
+      printf("EROARE: NU A INTRAT IN SCRIPT !!!\n");
+
+      exit(-1);
+    }
+    if (StatChildPid == 0) {
+      close(pipefd1[1]);
+      close(pipefd1[0]); // inchidem ambele capete pentru procesul care se ocupa de statistici
       int linesWritten = 0;
       char outputFileName[PATH_MAX];
       snprintf(outputFileName, PATH_MAX, "%s/%s_statistica.txt", outputDirName, entry->d_name);
@@ -295,14 +360,40 @@ int main(int argc, char *argv[]) {
       
       if (outputFd == -1) {
 	perror("Eroare la deschiderea fisierului de iesire");
-	return 1;
+	exit(-1);
       }
       
       if (entry->d_type == DT_REG) {
 	if (strstr(entryPath, ".bmp") != NULL) {
 	  processBMP(entryPath, outputFd, &linesWritten);
 	} else {
-	  processOtherFile(entryPath, outputFd, &linesWritten);
+    
+    processOtherFile(entryPath, outputFd, &linesWritten);
+    
+    close(pipefd2[0]);
+    //Deschidem fisierul pentru citire
+    int fd = open(entryPath, O_RDONLY);
+    if (fd == -1) {
+      perror("Eroare la deschiderea fisierului pentru citire");
+      exit(-1);
+    }
+    //redirectam din fiul_statistica continutul fisierului in fiul_script
+    char buffer[4096];
+    ssize_t bytesRead = 0;
+    if (dup2(pipefd2[1], STDOUT_FILENO) == -1) {
+      perror("Eroare la redirectionarea iesirii standard");
+      exit(-1);
+    }
+    close(pipefd2[1]);
+    while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0)
+    {
+        printf("%s\n",buffer);
+        write(pipefd2[1], buffer, bytesRead);
+    }
+    
+
+    close(fd);
+    
 	}
       } else if (entry->d_type == DT_DIR) {
 	processDirectory(entryPath, outputFd, &linesWritten);
@@ -312,23 +403,31 @@ int main(int argc, char *argv[]) {
       
       close(outputFd);
       exit(linesWritten);
-    } else {
-      int status = 0;
-      waitpid(childPid, &status, 0);
-
+    }
+  }
+  int status = 0;
+  int childPid = -1;
+  close(pipefd1[1]);
+  while((childPid = wait(&status)) != -1){
       
       if (WIFEXITED(status)) {
 	printf("S-a încheiat procesul cu pid-ul %d și codul %d\n", childPid, WEXITSTATUS(status));
       } else {
-	printf("Procesul cu pid-ul %d nu s-a încheiat normal\n", childPid);
+	printf("Procesul cu pid-ul %d nu s-a încheiat normal avand codul %d\n", childPid, WEXITSTATUS(status));
       }
-       // Scrierea valorii returnate de procesul fiu in fisierul statistica.txt, mai exact numarul de linii
-      writeToStatFile(statFd, childPid, WEXITSTATUS(status));
+      if(WEXITSTATUS(status) > 0){
+	writeToStatFile(statFd, childPid, WEXITSTATUS(status));
+      }
+
+    char buffer[512];
+    ssize_t bytesRead;
+    while ((bytesRead = read(pipefd1[0], buffer, 10)) > 0) {
+        totalCorrectSentences += atoi(buffer);
     }
   }
-
+  close(pipefd1[0]);
   close(statFd);
   closedir(dir);
-  
+  printf("Au fost identificate în total %d propoziții corecte care conțin caracterul %c\n", totalCorrectSentences, argv[3][0]);
   return 0;
 }

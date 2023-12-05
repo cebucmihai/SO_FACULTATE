@@ -1,0 +1,8 @@
+nume fisier: /home/mihai/Desktop/SO/dir_intrare/script_statistica.txt
+dimensiune: 206
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+

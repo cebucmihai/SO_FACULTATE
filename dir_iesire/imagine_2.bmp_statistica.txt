@@ -1,0 +1,11 @@
+nume fisier: /home/mihai/Desktop/SO/dir_intrare/imagine_2.bmp
+inaltime: 426
+lungime: 640
+dimensiune: 818058
+identificatorul utilizatorului: 1000
+timpul ultimei modificari: 05.12.2023
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+

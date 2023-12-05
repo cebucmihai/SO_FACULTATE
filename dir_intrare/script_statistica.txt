@@ -1,0 +1,8 @@
+nume fisier: /home/mihai/Desktop/SO/script
+dimensiune: 414
+identificatorul utilizatorului: 1000
+contorul de legaturi: 1
+drepturi de acces user: RWX
+drepturi de acces grup: R-X
+drepturi de acces altii: R-X
+
