@@ -1,0 +1,10 @@
+Pentru procesul fiu 6380 numarul de linii este 7.
+Pentru procesul fiu 6370 numarul de linii este 7.
+Pentru procesul fiu 6373 numarul de linii este 7.
+Pentru procesul fiu 6375 numarul de linii este 7.
+Pentru procesul fiu 6378 numarul de linii este 7.
+Pentru procesul fiu 6383 numarul de linii este 7.
+Pentru procesul fiu 6385 numarul de linii este 7.
+Pentru procesul fiu 6382 numarul de linii este 10.
+Pentru procesul fiu 6377 numarul de linii este 10.
+Pentru procesul fiu 6369 numarul de linii este 10.

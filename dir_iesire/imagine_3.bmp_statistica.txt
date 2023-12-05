@@ -1,0 +1,11 @@
+nume fisier: /home/mihai/Desktop/SO/dir_intrare/imagine_3.bmp
+inaltime: 256
+lungime: 256
+dimensiune: 196666
+identificatorul utilizatorului: 1000
+timpul ultimei modificari: 05.12.2023
+contorul de legaturi: 1
+drepturi de acces user: RW-
+drepturi de acces grup: R--
+drepturi de acces altii: R--
+
