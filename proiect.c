@@ -388,7 +388,6 @@ int main(int argc, char *argv[]) {
     while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0)
     {
         printf("%s\n",buffer);
-        write(pipefd2[1], buffer, bytesRead);
     }
     
 
